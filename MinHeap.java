@@ -56,6 +56,62 @@ public class MinHeap {
 
     }
 
+    private static void getNextRide()
+    {   
+        if(minHeap.size()==0) System.out.println("No Active Rides");
+        currIndex=--heapSize;
+        minHeap.set(0,minHeap.get(currIndex));
+        minHeapify(0);
+    }
+
+
+    private static void minHeapify(int ci)
+    {   
+        Ride smallest=minHeap.get(ci);
+        int smallestIndex=0;
+        if((ci*2+1)<heapSize && smallest.rideCost>=minHeap.get(ci*2+1).rideCost)
+        {
+            if(smallest.rideCost==minHeap.get(ci*2+1).rideCost)
+            {   
+                if(smallest.tripDuration>minHeap.get(ci*2+1).tripDuration)
+                {
+                    minHeap.set(ci,minHeap.get(ci*2+1));
+                    minHeap.set(ci*2+1, smallest);
+                    smallest=minHeap.get(ci*2+1);
+                    smallestIndex=ci*2+1;
+                }
+            }
+            else
+            {
+                minHeap.set(ci,minHeap.get(ci*2+1));
+                minHeap.set(ci*2+1, smallest);
+            }
+
+        }
+        if((ci*2+2)<heapSize)
+        {
+            if(smallest.rideCost==minHeap.get(ci*2+2).rideCost)
+            {   
+                if(smallest.tripDuration>minHeap.get(ci*2+2).tripDuration)
+                {
+                    minHeap.set(ci,minHeap.get(ci*2+2));
+                    minHeap.set(ci*2+2, smallest);
+                    smallest=minHeap.get(ci*2+2);
+                    smallestIndex=ci*2+2;
+                }
+            }
+            else
+            {
+                minHeap.set(ci,minHeap.get(ci*2+2));
+                minHeap.set(ci*2+2, smallest);
+            }
+        }
+        if(smallestIndex!=ci)
+            minHeapify(smallestIndex);
+
+        
+    }
+
     private static void printElements()
     {
         for(int i=0;i<minHeap.size();i++)
@@ -74,6 +130,8 @@ public class MinHeap {
         insertRide(96,28,82);
         insertRide(73,28,56);
         insertRide(73,28,25);
+        // printElements();
+        getNextRide();
         printElements();
         
     }
