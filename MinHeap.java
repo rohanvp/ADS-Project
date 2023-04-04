@@ -1,16 +1,14 @@
 import java.util.*;
 
-class Ride
+class MinHeapRide
 {
-    Ride left;
-    Ride right;
     int rideNumber;
     int rideCost;
     int tripDuration;
 
-    Ride(){}
+    MinHeapRide(){}
 
-    Ride(int rideNumber,int rideCost,int tripDuration)
+    MinHeapRide(int rideNumber,int rideCost,int tripDuration)
     {
         this.rideNumber=rideNumber;
         this.rideCost=rideCost;
@@ -20,21 +18,22 @@ class Ride
 
 public class MinHeap {
 
-    private static List<Ride> minHeap=new ArrayList<>();
+    private static List<MinHeapRide> minHeap=new ArrayList<>();
     private static int heapSize=0;
     private static int currIndex=-1;
 
 
+    // MIN HEAP IMPLEMENTATION
     private static void insertRide(int rideNumber,int rideCost,int tripDuration)
     {
-        Ride newRide=new Ride(rideNumber, rideCost, tripDuration);
+        MinHeapRide newRide=new MinHeapRide(rideNumber, rideCost, tripDuration);
         heapSize++;
         currIndex=heapSize-1;
         minHeap.add(newRide);
         while(currIndex!=0 && minHeap.get((currIndex-1)/2).rideCost>=minHeap.get(currIndex).rideCost)
         {   
             int parent=(currIndex-1)/2;
-            Ride temp=minHeap.get(parent);
+            MinHeapRide temp=minHeap.get(parent);
             if(minHeap.get((currIndex-1)/2).rideCost==minHeap.get(currIndex).rideCost)
             {   
                 if(minHeap.get((currIndex-1)/2).tripDuration>minHeap.get(currIndex).tripDuration)
@@ -67,7 +66,7 @@ public class MinHeap {
 
     private static void minHeapify(int ci)
     {   
-        Ride smallest=minHeap.get(ci);
+        MinHeapRide smallest=minHeap.get(ci);
         int smallestIndex=0;
         if((ci*2+1)<heapSize && smallest.rideCost>=minHeap.get(ci*2+1).rideCost)
         {
@@ -111,6 +110,7 @@ public class MinHeap {
 
         
     }
+    // MIN HEAP IMPLEMENTATION
 
     private static void printElements()
     {
@@ -129,7 +129,6 @@ public class MinHeap {
         insertRide(53,97,22); 
         insertRide(96,28,82);
         insertRide(73,28,56);
-        insertRide(73,28,25);
         // printElements();
         getNextRide();
         printElements();
@@ -139,3 +138,4 @@ public class MinHeap {
 
     
 }
+
