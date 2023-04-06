@@ -5,6 +5,7 @@ class MinHeapRide
     int rideNumber;
     int rideCost;
     int tripDuration;
+    RbtRide newRbtRide;
 
     MinHeapRide(){}
 
@@ -13,6 +14,29 @@ class MinHeapRide
         this.rideNumber=rideNumber;
         this.rideCost=rideCost;
         this.tripDuration=tripDuration;
+        this.newRbtRide=null;
+    }
+}
+
+class RbtRide
+{
+    int rideNumber;
+    int rideCost;
+    int tripDuration;
+    // COLOR 0->BLACK,1->RED
+    int color;
+    RbtRide parent;
+    RbtRide left;
+    RbtRide right;
+
+    RbtRide(){}
+
+    RbtRide(int rideNumber,int rideCost,int tripDuration)
+    {
+        this.rideNumber=rideNumber;
+        this.rideCost=rideCost;
+        this.tripDuration=tripDuration;
+
     }
 }
 
@@ -55,8 +79,14 @@ public class MinHeap {
 
     }
 
+    private static void deleteRide(int rideNumber)
+    {
+        
+    }
+
     private static void getNextRide()
     {   
+        // THIS FUNCTION ALSO IMPLEMENTS DELETION
         if(minHeap.size()==0) System.out.println("No Active Rides");
         currIndex=--heapSize;
         minHeap.set(0,minHeap.get(currIndex));
