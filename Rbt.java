@@ -1,6 +1,5 @@
 import java.util.*;
 
-import javax.swing.plaf.synth.SynthStyle;
 
 class RbtRide
 {
@@ -166,96 +165,236 @@ public class Rbt {
 
     private static void bstDelete(int rideNumber)
     {
-        RbtRide y=null;
-        RbtRide x=root;
+        // RbtRide y=null;
+        RbtRide curr=root;
 
-        while(x!=null)
+        while(curr!=null)
         {   
-            y=x;
-            if(x.rideNumber==rideNumber) break;
-            if(x.rideNumber>rideNumber)
+            // y=curr;
+            if(curr.rideNumber==rideNumber) break;
+            if(curr.rideNumber>rideNumber)
             {
-                x=x.left;
+                curr=curr.left;
             }
             else
             {
-                x=x.right;
+                curr=curr.right;
             }
             
         }
-        if(x==null) return;
+        if(curr==null) return;
 
-        // 
-        if(x.left==null || x.right==null)
+        RbtRide z=curr;
+        RbtRide x,y;
+
+        y=z;
+        int yOg=y.color;
+        if(z.left==null)
         {
-            standardBstDelete(x);
-            deleteColorBalance();
-            return;
+            x=z.right;
+
+            RbtRide u=z,v=z.right;
+            switchNodes(u,v);
         }
-        // 
-
-        // IF NODE HAS TWO CHILDREN WE TAKE THE HIGHEST FROM LEFT SUBTREE
-
-        RbtRide highest=x;
-        while(highest.left!=null && highest.right!=null)
+        else if(z.right==null)
         {
-            highest=highest.right;
+            x=z.left;
+            RbtRide u=z,v=z.left;
+            switchNodes(u,v);
+
         }
-        x.rideNumber=highest.rideNumber;
-        x.rideCost=highest.rideCost;
-        x.tripDuration=highest.tripDuration;
-
-        standardBstDelete(highest);
-
-        // if(highest.left!=null && highest.right==null)
-        // {
-        //     if(highest.parent.left==highest) 
-        //     {   
-        //         highest.parent.left=highest.left;
-        //     }
+        else
+        {   
+            RbtRide nodeReplacedBy=z.right;
+            while(nodeReplacedBy.left!=null)
+            {
+                nodeReplacedBy=nodeReplacedBy.left;
+            }
+            y=nodeReplacedBy;
+            yOg=y.color;
+            x=y.right;
             
-        // }
+            if(y!=null && y.parent!=null && x!=null && x.parent!=null)
+                if(y.parent==z) x.parent=y;
+            else
+            {
+                RbtRide u=z,v=y;
+                switchNodes(u,v);
 
-        // if(highest.left==null && highest.right==null)
+                if(y.right!=null)
+                {
+                    y.right = z.right;
+				    y.right.parent = y;
+                }
+
+            }
+
+            switchNodes(z,y);
+            y.left = z.left;
+			y.left.parent = y;
+			y.color = z.color;
+
+        }
+
+        if (yOg == 0){
+			deleteColorBalance(x);
+		}
+
+        // // IF NODE HAS TWO CHILDREN WE TAKE THE HIGHEST FROM LEFT SUBTREE
+
+        // RbtRide nodeReplacedBy=x.left;
+        // while(nodeReplacedBy.left!=null && nodeReplacedBy.right!=null)
         // {
-        //     if(highest.parent.right==highest) highest.parent.right=null;
-        //     else highest.parent.left=null;
+        //     nodeReplacedBy=nodeReplacedBy.right;
         // }
+        // // RbtRide nodeDeleted=new RbtRide(x.rideNumber,x.rideCost,x.tripDuration);
+        
+        
+        // x.rideNumber=nodeReplacedBy.rideNumber;
+        // x.rideCost=nodeReplacedBy.rideCost;
+        // x.tripDuration=nodeReplacedBy.tripDuration;
+        
+        // // System.out.println(1);
+        
+        // standardBstDelete(nodeDeleted,nodeReplacedBy);
+
+        
+
+        // // if(highest.left!=null && highest.right==null)
+        // // {
+        // //     if(highest.parent.left==highest) 
+        // //     {   
+        // //         highest.parent.left=highest.left;
+        // //     }
+            
+        // // }
+
+        // // if(highest.left==null && highest.right==null)
+        // // {
+        // //     if(highest.parent.right==highest) highest.parent.right=null;
+        // //     else highest.parent.left=null;
+        // // }
         
     }
 
-    private static void standardBstDelete(RbtRide node)
-    {   
-        RbtRide x=node;
-        // IF NODE TO BE DELETED IS LEAF
-        if(x.left==null && x.right==null)
-        {
-            if(x.parent.right==x) x.parent.right=null;
-            else x.parent.left=null;
-            
-            if(x.color==1) return;
-            deleteColorBalance();
-            return;
-        } 
-
-        // IF NODE TO BE DELETED HAS ONLY ONE CHILD
-        if(x.left!=null && x.right==null)
-        {
-            if(x.parent.left==x) x.parent.left=x.left;
-            else x.parent.right=x.left;
-        }
-        else if(x.left==null && x.right!=null)
-        {
-            if(x.parent.left==x) x.parent.left=x.right;
-            else x.parent.right=x.right;
-            if(x.color==1) return;
-            deleteColorBalance();
-
-        }
+    private static void switchNodes(RbtRide u,RbtRide v)
+    {
+        if (u.parent == null) {
+			root = v;
+		} else if (u == u.parent.left){
+			u.parent.left = v;
+		} else {
+			u.parent.right = v;
+		}
+        if(v!=null && u!=null)
+		    v.parent = u.parent;
     }
 
-    private static void deleteColorBalance()
-    {
+    // private static void standardBstDelete(RbtRide nodeDeleted,RbtRide nodeReplacedBy)
+    // {   
+    //     // System.out.println(nodeDeleted.rideNumber);
+    //     // System.out.println(nodeReplacedBy.rideNumber);
+
+    //     RbtRide x=nodeDeleted;
+    //     // IF NODE TO BE DELETED IS LEAF
+    //     if(x.left==null && x.right==null)
+    //     {   
+    //         // System.out.println(1);
+    //         if(x.parent.right==x) x.parent.right=null;
+    //         else x.parent.left=null;
+    //         // System.out.println(1);
+    //         if(x.color==1) return;
+    //         deleteColorBalance(nodeDeleted,nodeReplacedBy);
+    //         return;
+    //     } 
+
+    //     // IF NODE TO BE DELETED HAS ONLY ONE CHILD
+    //     if(x.left!=null && x.right==null)
+    //     {
+    //         if(x.parent.left==x) x.parent.left=x.left;
+    //         else x.parent.right=x.left;
+    //         if(x.color==1) return;
+    //         deleteColorBalance(nodeDeleted,nodeReplacedBy);
+    //     }
+    //     else if(x.left==null && x.right!=null)
+    //     {
+    //         if(x.parent.left==x) x.parent.left=x.right;
+    //         else x.parent.right=x.right;
+    //         if(x.color==1) return;
+    //         deleteColorBalance(nodeDeleted,nodeReplacedBy);
+
+    //     }
+    // }
+
+    private static void deleteColorBalance(RbtRide x)
+    {   
+        
+        RbtRide s;
+		while (x != root && x.color == 0) {
+			if (x == x.parent.left) {
+				s = x.parent.right;
+				if (s.color == 1) {
+					// case 3.1
+					s.color = 0;
+					x.parent.color = 1;
+					rotateRR(x.parent);
+					s = x.parent.right;
+				}
+
+				if (s.left.color == 0 && s.right.color == 0) {
+					// case 3.2
+					s.color = 1;
+					x = x.parent;
+				} else {
+					if (s.right.color == 0) {
+						// case 3.3
+						s.left.color = 0;
+						s.color = 1;
+						rotateLL(s);
+						s = x.parent.right;
+					} 
+
+					// case 3.4
+					s.color = x.parent.color;
+					x.parent.color = 0;
+					s.right.color = 0;
+					rotateRR(x.parent);
+					x = root;
+				}
+			} else {
+				s = x.parent.left;
+				if (s.color == 1) {
+					// case 3.1
+					s.color = 0;
+					x.parent.color = 1;
+					rotateLL(x.parent);
+					s = x.parent.left;
+				}
+
+				if (s.right.color == 0 && s.right.color == 0) {
+					// case 3.2
+					s.color = 1;
+					x = x.parent;
+				} else {
+					if (s.left.color == 0) {
+						// case 3.3
+						s.right.color = 0;
+						s.color = 1;
+						rotateLL(s);
+						s = x.parent.left;
+					} 
+
+					// case 3.4
+					s.color = x.parent.color;
+					x.parent.color = 0;
+					s.left.color = 0;
+					rotateLL(x.parent);
+					x = root;
+				}
+			} 
+		}
+		x.color = 0;
+
 
     }
 
@@ -285,11 +424,6 @@ public class Rbt {
 
     }
 
-    private static void insertDataHelper()
-    {
-
-    }
-
     private static void printElements(RbtRide curr)
     {
         if(curr==null) return;
@@ -305,17 +439,17 @@ public class Rbt {
     public static void main(String[] args) {
 
         insertRide(9,76,31);
-        insertRide(25, 98, 46);
+        // insertRide(25, 98, 46);
         insertRide(42,17,89);
         insertRide(53,97,22); 
         insertRide(96,28,82);
         insertRide(73,28,56);
         insertRide(20,49,59);
-        insertRide(62,7,10);
-        // bstDelete(73);
+
+        // insertRide(62,7,10);
+        // bstDelete(42);
         printElements(root);
         // System.out.println(root.right.right.rideNumber);
-        // System.out.println(root.right.rideNumber);
         
     }
     

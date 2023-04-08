@@ -156,11 +156,8 @@ public class MinHeap {
         insertRide(25, 98, 46);
         insertRide(42,17,89);
         insertRide(9,76,31);
-        insertRide(53,97,22); 
-        insertRide(96,28,82);
-        insertRide(73,28,56);
         // printElements();
-        getNextRide();
+        // getNextRide();
         printElements();
         
     }
