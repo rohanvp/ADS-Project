@@ -1,4 +1,6 @@
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.Method;
@@ -72,33 +74,32 @@ class MinHeap {
 
         }
         newRide.objectCurrIndex=currIndex;
+        // System.out.println(currIndex);
         return newRide;
 
     }
 
     public static void deleteRide(MinHeapRide node)
     {   
-        // System.out.println(node.objectCurrIndex);
+        
         if(minHeapList.size()==0) 
         {
-            System.out.println("No Active Rides");
+            GatorTaxi.sb.append("("+"0,"+"0,"+"0)"+"\n");
             return;
         }
         if(minHeapList.size()==1)
         {
             minHeapList.remove(0);
             node.rbtPtr.minheapPtr=null;
+            heapSize--;
             return;
         }
+        
         // System.out.println(node.objectCurrIndex);
-        // System.out.println(minHeapList.size());
-        minHeapList.set(node.objectCurrIndex,minHeapList.get(heapSize-1));
-        // minHeapList.get(node.objectCurrIndex).rideCost=minHeapList.get(heapSize).rideCost;
-        // minHeapList.get(node.objectCurrIndex).rideNumber=minHeapList.get(heapSize).rideNumber;
-        // minHeapList.get(node.objectCurrIndex).tripDuration=minHeapList.get(heapSize).tripDuration;
-        minHeapList.remove(heapSize-1);
+        minHeapList.set(node.objectCurrIndex,minHeapList.get(minHeapList.size()-1));
+        minHeapList.remove(minHeapList.size()-1);
 
-        if(heapSize!=0)   
+        if(minHeapList.size()!=0)   
         {
             minHeapify(node.objectCurrIndex);
             heapSize-=1;
@@ -111,7 +112,8 @@ class MinHeap {
         // THIS FUNCTION ALSO IMPLEMENTS DELETION
         if(minHeapList.size()==0) 
         {
-            System.out.println("No Active Rides");
+            // System.out.println("No Active Rides");
+            GatorTaxi.sb.append("No Active Rides"+"\n");
             return null;
         }
         if(minHeapList.size()==1)
@@ -196,11 +198,15 @@ class MinHeap {
                 }
             }
             else
-            {
-                minHeapList.set(ci,minHeapList.get((ci*2+2)));
-                minHeapList.get(ci).objectCurrIndex=ci;
-                minHeapList.set((ci*2+2), smallest);
-                minHeapList.get((ci*2+2)).objectCurrIndex=(ci*2+2);
+            {   
+                if(ci<minHeapList.size())
+                {   
+                    minHeapList.set(ci,minHeapList.get((ci*2+2)));
+                    minHeapList.get(ci).objectCurrIndex=ci;
+                    minHeapList.set((ci*2+2), smallest);
+                    minHeapList.get((ci*2+2)).objectCurrIndex=(ci*2+2);
+                }
+                
             }
         }
         if(smallestIndex!=ci)
@@ -707,6 +713,8 @@ class Rbt {
 
 public class GatorTaxi {    
 
+    static StringBuilder sb=new StringBuilder();
+
     private static void Print(RbtRide node, int ride1, int ride2) {
          
         if (node == null) {
@@ -719,7 +727,8 @@ public class GatorTaxi {
  
         
         if (ride1 <= node.rideNumber && ride2 >= node.rideNumber) {
-            System.out.print(node.rideNumber+" "+node.rideCost+" "+node.tripDuration+"      ");
+            
+            sb.append("("+node.rideNumber+","+node.rideCost+","+node.tripDuration+"),");
         }
  
          Print(node.right, ride1, ride2);
@@ -745,7 +754,11 @@ public class GatorTaxi {
 
 
         RbtRide curr_location=Rbt.searchRide(rideNumber);
-        if(curr_location==null) System.out.println("No Ride Found");
+        if(curr_location==null) 
+        {
+            sb.append("(0,0,0)\n");
+
+        }
         else System.out.println(curr_location.rideNumber+" "+curr_location.rideCost+" "+curr_location.tripDuration);
         
         
@@ -753,7 +766,14 @@ public class GatorTaxi {
     private static void printRideNumber(int rideNumber1,int rideNumber2) {
 
         Print(Rbt.root,rideNumber1,rideNumber2);
-        System.out.println();
+        String temp=sb.toString();
+        char c=temp.charAt(temp.length()-1);
+        if(c==',')
+        {   
+            sb.setLength(0);
+            sb.append(temp.substring(0, temp.length()-1));
+        }
+        sb.append("\n");
         
     }
 
@@ -762,7 +782,17 @@ public class GatorTaxi {
         RbtRide newRbtRidePtr=Rbt.insertRide(rideNumber, rideCost, tripDuration);
         if(newRbtRidePtr==null)
         {   
-            System.out.println("Duplicate RideNumber");
+            // System.out.println("Duplicate RideNumber");
+            sb.append("Duplicate RideNumber");
+            try
+            {
+                Files.write(Paths.get("output.txt"), sb.toString().getBytes());
+
+            }
+            catch(Exception e)
+            {
+                System.out.println("Exception");
+            }
             System.exit(0);
         }
         else
@@ -782,8 +812,8 @@ public class GatorTaxi {
         MinHeapRide minHeapRide=MinHeap.getNextRide();
         if(minHeapRide!=null)
         {   
-            
-            System.out.println(minHeapRide.rideNumber+" "+minHeapRide.rideCost+" "+minHeapRide.tripDuration);
+            sb.append("("+minHeapRide.rideNumber+","+minHeapRide.rideCost+","+minHeapRide.tripDuration+")"+"\n");
+            // System.out.println(minHeapRide.rideNumber+" "+minHeapRide.rideCost+" "+minHeapRide.tripDuration);
             Rbt.deleteRide(minHeapRide.rideNumber);
             
         }
@@ -800,7 +830,8 @@ public class GatorTaxi {
         
 
         RbtRide node=Rbt.deleteRide(rideNumber);
-        MinHeap.deleteRide(node.minheapPtr);
+        if(node!=null)
+            MinHeap.deleteRide(node.minheapPtr);
         
     }
 
@@ -818,7 +849,6 @@ public class GatorTaxi {
         int existingTripDuration=rbtRideLocation.tripDuration;
         if(newTripDuration<=existingTripDuration) 
         {   
-            
             rbtRideLocation.tripDuration=newTripDuration;
             minheapRideLocation.tripDuration=newTripDuration;
         }
@@ -939,6 +969,7 @@ public class GatorTaxi {
 
         // }
 
+        
 
 
         // MANUAL INSERT
@@ -974,8 +1005,16 @@ public class GatorTaxi {
         printRideNumber(1);
         printRideNumber(-1);
         printElements();
+        try
+        {
+            Files.write(Paths.get("output.txt"), sb.toString().getBytes());
 
-
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception");
+        }
+        
 
 
 
@@ -998,7 +1037,7 @@ public class GatorTaxi {
         // // printElements();
         // // updateTrip(3,22);
         // // insertData(9,55,110);
-        // printElements();
+        // // printElements();
         // getNextRide();
         // updateTrip(6,95);
         // printRideNumber(6);
