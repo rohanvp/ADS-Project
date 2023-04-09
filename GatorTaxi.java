@@ -488,7 +488,7 @@ class Rbt {
         }
         else
         {   
-            RbtRide nodeReplacedBy=z.right;
+            RbtRide nodeReplacedBy=z.right; 
             while(nodeReplacedBy.left!=null)
             {
                 nodeReplacedBy=nodeReplacedBy.left;
@@ -497,11 +497,33 @@ class Rbt {
             yOg=y.color;
             x=y.right;
             
+    
             // if(y!=null && y.parent!=null && x!=null && x.parent!=null)
             if(y!=null && x!=null)
-                if(y.parent==z) x.parent=y;
-            else
             {
+                if(y.parent==z) x.parent=y;
+
+            }
+            else if(x==null && y!=null && yOg==0)
+            {   
+                
+                z.rideCost=y.rideCost;
+                z.rideNumber=y.rideNumber;
+                z.tripDuration=y.tripDuration;
+                z.color=y.color;
+                z.minheapPtr.rbtPtr=z;
+                if(y==y.parent.left) y.parent.left=null;
+                else y.parent.right=null;
+                if(z.parent==null) 
+                {
+                    
+                    root=z;
+                    System.out.println(z.left.right.rideNumber);
+                }
+                return z;
+            }
+            else
+            {   
                 RbtRide u=z,v=y.right;
                 switchNodes(u,v);
 
@@ -675,8 +697,8 @@ class Rbt {
     {
         if(curr==null) return;
         printElements(curr.left);
-        // System.out.println(curr.rideNumber+" "+curr.rideCost+" "+curr.tripDuration);
-        System.out.println(curr.minheapPtr.rideNumber+" "+curr.minheapPtr.rideCost+" "+curr.minheapPtr.tripDuration);
+        System.out.println(curr.rideNumber+" "+curr.rideCost+" "+curr.tripDuration);
+        // System.out.println(curr.minheapPtr.rideNumber+" "+curr.minheapPtr.rideCost+" "+curr.minheapPtr.tripDuration);
         // System.out.println(curr.color);
         // if(curr.parent!=null)
         //     System.out.println(curr.parent.rideNumber+" "+curr.parent.rideCost+" "+curr.parent.tripDuration);
@@ -1003,7 +1025,7 @@ public class GatorTaxi {
         // Insert(53, 28, 19);
         // Print(1, 100);
         // Print(1);
-        // Print(-1);
+        Print(-1);
         // printElements();
         try
         {
@@ -1019,28 +1041,29 @@ public class GatorTaxi {
 
 
 
-        Insert(5,50,120);
-        Insert(4,30,60);
-        Insert(7,40,90);
-        Insert(3,20,40);
-        Insert(1,10,20);
-        Print(2);
-        Insert(6,35,70);
-        Insert(8,45,100);
-        Print(3);
-        Print(1,6);
-        UpdateTrip(6,75);
+        // Insert(5,50,120);
+        // Insert(4,30,60);
+        // Insert(7,40,90);
+        // Insert(3,20,40);
+        // Insert(1,10,20);
+        // Print(2);
+        // Insert(6,35,70);
+        // Insert(8,45,100);
+        // Print(3);
+        // Print(1,6);
+        // UpdateTrip(6,75);
+        // // // printElements();
+        // Insert(10,60,150);
+        // GetNextRide();
+        // CancelRide(5);
+        // // System.out.println(Rbt.root.rideNumber);
         // // printElements();
-        Insert(10,60,150);
-        GetNextRide();
-        CancelRide(5);
-        System.out.println(Rbt.root.rideNumber);
-        printElements();
         // UpdateTrip(3,22);
         // Insert(9,55,110);
-        // // printElements();
+        // // // // printElements();
         // GetNextRide();
         // UpdateTrip(6,95);
+        // // printElements();
         // Print(6);
         // Print(5,9);
         // GetNextRide();
