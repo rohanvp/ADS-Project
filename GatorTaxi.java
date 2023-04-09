@@ -707,6 +707,26 @@ class Rbt {
 
 public class GatorTaxi {    
 
+    private static void Print(RbtRide node, int ride1, int ride2) {
+         
+        if (node == null) {
+            return;
+        }
+ 
+        if (ride1 < node.rideNumber) {
+            Print(node.left, ride1, ride2);
+        }
+ 
+        
+        if (ride1 <= node.rideNumber && ride2 >= node.rideNumber) {
+            System.out.print(node.rideNumber+" "+node.rideCost+" "+node.tripDuration+"      ");
+        }
+ 
+         Print(node.right, ride1, ride2);
+
+    }
+
+
     private static void printElements()
     {   
         System.out.println("PRINT MINHEAP ELEMENTS");
@@ -723,11 +743,7 @@ public class GatorTaxi {
 
     private static void printRideNumber(int rideNumber) {
 
-        // prints the triplet (rideNumber, rideCost, tripDuration).
-        // for(int i=0;i<heapSize;i++)
-        // {
-        //     if(minHeap.get(i).rideNumber==rideNumber) System.out.println(minHeap.get(i));
-        // }
+
         RbtRide curr_location=Rbt.searchRide(rideNumber);
         if(curr_location==null) System.out.println("No Ride Found");
         else System.out.println(curr_location.rideNumber+" "+curr_location.rideCost+" "+curr_location.tripDuration);
@@ -736,9 +752,8 @@ public class GatorTaxi {
     }
     private static void printRideNumber(int rideNumber1,int rideNumber2) {
 
-        // prints all triplets (rx, rideCost, tripDuration) for which rideNumber1 <= rx <= rideNumber2.
-        System.out.println("FUNCTION NOT IMPLEMENTED YET");
-
+        Print(Rbt.root,rideNumber1,rideNumber2);
+        System.out.println();
         
     }
 
@@ -936,7 +951,7 @@ public class GatorTaxi {
         getNextRide(); 
         insertData(68, 40, 51);
         getNextRide();
-        // printRideNumber(1, 100);
+        printRideNumber(1,100);
         updateTrip(53, 15);
         insertData(96,28,82) ;
         insertData(73,28,56) ;
@@ -953,11 +968,11 @@ public class GatorTaxi {
         insertData(25, 49, 46);
         updateTrip(62, 15);
         getNextRide();
-        // printRideNumber(1, 100);
+        printRideNumber(1, 100);
         insertData(53, 28, 19);
-        // printRideNumber(1, 100);
-        // printRideNumber(1);
-        // printRideNumber(-1);
+        printRideNumber(1, 100);
+        printRideNumber(1);
+        printRideNumber(-1);
         printElements();
 
 
