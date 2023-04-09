@@ -713,29 +713,32 @@ class Rbt {
 
 public class GatorTaxi {    
 
+    // STRING BUILDER FUNCTION TO STORE THE STRING WE WANT TO PRINT
     static StringBuilder sb=new StringBuilder();
 
-    private static void Print(RbtRide node, int ride1, int ride2) {
+    // THIS METHOD RECURSIVELY STORES THE RIDE VALUES IN sb IN RANGE BETWEEN ride1 and ride2
+    private static void rangedPrint(RbtRide ride, int ride1, int ride2) {
          
-        if (node == null) {
+        if (ride == null) {
             return;
         }
  
-        if (ride1 < node.rideNumber) {
-            Print(node.left, ride1, ride2);
+        if (ride1 < ride.rideNumber) 
+        {
+            rangedPrint(ride.left, ride1, ride2);
         }
- 
-        
-        if (ride1 <= node.rideNumber && ride2 >= node.rideNumber) {
+  
+        if (ride1 <= ride.rideNumber && ride2 >= ride.rideNumber) 
+        {
             
-            sb.append("("+node.rideNumber+","+node.rideCost+","+node.tripDuration+"),");
+            sb.append("("+ride.rideNumber+","+ride.rideCost+","+ride.tripDuration+"),");
         }
  
-         Print(node.right, ride1, ride2);
+        rangedPrint(ride.right, ride1, ride2);
 
     }
 
-
+    // PRINT FUNCTION FOR TESTING PURPOSE
     private static void printElements()
     {   
         System.out.println("PRINT MINHEAP ELEMENTS");
@@ -749,8 +752,8 @@ public class GatorTaxi {
         Rbt.printElements(Rbt.root);
     }
 
-
-    private static void printRideNumber(int rideNumber) {
+    // PRINT RIDE NUMBER. SIMPLE SEARCH IN RBT.
+    private static void Print(int rideNumber) {
 
 
         RbtRide curr_location=Rbt.searchRide(rideNumber);
@@ -759,13 +762,14 @@ public class GatorTaxi {
             sb.append("(0,0,0)\n");
 
         }
-        else System.out.println(curr_location.rideNumber+" "+curr_location.rideCost+" "+curr_location.tripDuration);
-        
+        else sb.append("("+curr_location.rideNumber+" "+curr_location.rideCost+" "+curr_location.tripDuration+")\n");
         
     }
-    private static void printRideNumber(int rideNumber1,int rideNumber2) {
 
-        Print(Rbt.root,rideNumber1,rideNumber2);
+    // PRINT RIDE NUMBER BETWEEN SPECIFIED RANGE
+    private static void Print(int rideNumber1,int rideNumber2) {
+
+        rangedPrint(Rbt.root,rideNumber1,rideNumber2);
         String temp=sb.toString();
         char c=temp.charAt(temp.length()-1);
         if(c==',')
@@ -777,7 +781,8 @@ public class GatorTaxi {
         
     }
 
-    private static void insertData(int rideNumber,int rideCost,int tripDuration) {
+    // INSERT SPECIFIED DATA INTO RBT AND MINHEAP SERIALLY.
+    private static void Insert(int rideNumber,int rideCost,int tripDuration) {
 
         RbtRide newRbtRidePtr=Rbt.insertRide(rideNumber, rideCost, tripDuration);
         if(newRbtRidePtr==null)
@@ -805,10 +810,9 @@ public class GatorTaxi {
 
     }
 
-    private static void getNextRide() {
+    // FETCH NEXT RIDE FROM MINHEAP IN O(1) TIME. FETCH THE SAME RIDE IN RBT IN O(1) USING POINTER. DELETE RIDE AFTER SUCCESSFULL FETCH.
+    private static void GetNextRide() {
         
-        //  When this function is invoked, the ride with the lowest rideCost (ties are broken by selecting the ride with the lowest tripDuration) is output.
-        //  This ride is then deleted from the data structure.
         MinHeapRide minHeapRide=MinHeap.getNextRide();
         if(minHeapRide!=null)
         {   
@@ -826,7 +830,8 @@ public class GatorTaxi {
         
     }
 
-    private static void cancelRide(int rideNumber) {
+    // SEARCH RIDE IN RBT IN O(1) TIME. DELETE IT IN RBT. USE POINTER TO FETCH RIDE FROM MINHEAP. ARBITRARY DELETE IN MINHEAP.
+    private static void CancelRide(int rideNumber) {
         
 
         RbtRide node=Rbt.deleteRide(rideNumber);
@@ -835,7 +840,8 @@ public class GatorTaxi {
         
     }
 
-    private static void updateTrip(int rideNumber,int newTripDuration) {
+    // UPDATE RIDE ACCORDING TO GIVEN CONDITIONS. FETCH IN RBT IN O(logn). USE POINTER TO REACH MINHEAP LOCATION IN O(1).
+    private static void UpdateTrip(int rideNumber,int newTripDuration) {
         // a) if the new_tripDuration <= existing tripDuration, there would be no action needed.
         // b) if the existing_tripDuration < new_tripDuration <= 2*(existing tripDuration), the driver will
         //    cancel the existing ride and a new ride request would be created with a penalty of 10 on existing rideCost . 
@@ -855,26 +861,20 @@ public class GatorTaxi {
         else if(existingTripDuration<newTripDuration && newTripDuration<=(2*existingTripDuration))
         {   
             
-            cancelRide(rideNumber);
-            insertData(rideNumber, rbtRideLocation.rideCost+10, newTripDuration);
+            CancelRide(rideNumber);
+            Insert(rideNumber, rbtRideLocation.rideCost+10, newTripDuration);
         }
         else if(newTripDuration>(2*existingTripDuration))
         {   
             
             if(rbtRideLocation!=null)
-                cancelRide(rbtRideLocation.rideNumber);
+                CancelRide(rbtRideLocation.rideNumber);
         }
 
         
     }
 
-
-    private static void pointerTester()
-    {
-
-    }
-
-
+    // METHOD TO PROCESS INPUT FILE. CREATE A LIST OF METHOD CALLS.
     private static List<String> processInputFile(List<String> methodList,String fileName)
     {
         try {
@@ -950,21 +950,21 @@ public class GatorTaxi {
 
         //     if(functionName.equals("Insert"))
         //     {
-        //         insertData(param1, param2, param3);
+        //         Insert(param1, param2, param3);
         //     }
         //     else if(functionName.equals("GetNextRide"))
         //     {
-        //         getNextRide();
+        //         GetNextRide();
         //     }
         //     else if(functionName.equals("Print"))
         //     {
-        //         if(paramLen==1) printRideNumber(param1);
-        //         else printRideNumber(param1, param2);
+        //         if(paramLen==1) Print(param1);
+        //         else Print(param1, param2);
 
         //     }
-        //     else if(functionName.equals("updateTrip"))
+        //     else if(functionName.equals("UpdateTrip"))
         //     {
-        //         updateTrip(param1, param2);
+        //         UpdateTrip(param1, param2);
         //     }
 
         // }
@@ -973,38 +973,38 @@ public class GatorTaxi {
 
 
         // MANUAL INSERT
-        insertData(25,98,46);
-        getNextRide();
-        getNextRide();
-        insertData(42,17,89);
-        insertData(9,76,31);
-        insertData(53,97,22);
-        getNextRide(); 
-        insertData(68, 40, 51);
-        getNextRide();
-        printRideNumber(1,100);
-        updateTrip(53, 15);
-        insertData(96,28,82) ;
-        insertData(73,28,56) ;
-        updateTrip(9, 88);
-        // for(int i=0;i<MinHeap.minHeapList.size();i++)
-        // {
-        //     System.out.println(MinHeap.minHeapList.get(i).rideNumber);
-        // }
-        getNextRide();
-        printRideNumber(9);
-        insertData(20,49,59); 
-        insertData(62,7,10);
-        cancelRide(20);
-        insertData(25, 49, 46);
-        updateTrip(62, 15);
-        getNextRide();
-        printRideNumber(1, 100);
-        insertData(53, 28, 19);
-        printRideNumber(1, 100);
-        printRideNumber(1);
-        printRideNumber(-1);
-        printElements();
+        // Insert(25,98,46);
+        // GetNextRide();
+        // GetNextRide();
+        // Insert(42,17,89);
+        // Insert(9,76,31);
+        // Insert(53,97,22);
+        // GetNextRide(); 
+        // Insert(68, 40, 51);
+        // GetNextRide();
+        // Print(1,100);
+        // UpdateTrip(53, 15);
+        // Insert(96,28,82) ;
+        // Insert(73,28,56) ;
+        // UpdateTrip(9, 88);
+        // // for(int i=0;i<MinHeap.minHeapList.size();i++)
+        // // {
+        // //     System.out.println(MinHeap.minHeapList.get(i).rideNumber);
+        // // }
+        // GetNextRide();
+        // Print(9);
+        // Insert(20,49,59); 
+        // Insert(62,7,10);
+        // CancelRide(20);
+        // Insert(25, 49, 46);
+        // UpdateTrip(62, 15);
+        // GetNextRide();
+        // Print(1, 100);
+        // Insert(53, 28, 19);
+        // Print(1, 100);
+        // Print(1);
+        // Print(-1);
+        // printElements();
         try
         {
             Files.write(Paths.get("output.txt"), sb.toString().getBytes());
@@ -1019,105 +1019,119 @@ public class GatorTaxi {
 
 
 
-        // insertData(5,50,120);
-        // insertData(4,30,60);
-        // insertData(7,40,90);
-        // insertData(3,20,40);
-        // insertData(1,10,20);
-        // printRideNumber(2);
-        // insertData(6,35,70);
-        // insertData(8,45,100);
-        // printRideNumber(3);
-        // printRideNumber(1,6);
-        // updateTrip(6,75);
+        Insert(5,50,120);
+        Insert(4,30,60);
+        Insert(7,40,90);
+        Insert(3,20,40);
+        Insert(1,10,20);
+        Print(2);
+        Insert(6,35,70);
+        Insert(8,45,100);
+        Print(3);
+        Print(1,6);
+        UpdateTrip(6,75);
         // // printElements();
-        // insertData(10,60,150);
-        // getNextRide();
-        // cancelRide(5);
+        Insert(10,60,150);
+        GetNextRide();
+        CancelRide(5);
+        System.out.println(Rbt.root.rideNumber);
+        printElements();
+        // UpdateTrip(3,22);
+        // Insert(9,55,110);
         // // printElements();
-        // // updateTrip(3,22);
-        // // insertData(9,55,110);
-        // // printElements();
-        // getNextRide();
-        // updateTrip(6,95);
-        // printRideNumber(6);
-        // printRideNumber(5,9);
-        // getNextRide();
-        // cancelRide(7);
-        // printRideNumber(7);
-        // insertData(11,70,170);
-        // getNextRide();
-        // insertData(12,80,200);
-        // printRideNumber(12);
-        // updateTrip(11,210);
-        // getNextRide();
-        // cancelRide(14);
-        // updateTrip(12,190);
-        // insertData(13,70,220);
-        // getNextRide();
-        // insertData(14,100,40);
-        // updateTrip(14,100);
-        // cancelRide(12);
-        // printRideNumber(11,14);
-        // getNextRide();
-        // insertData(15,20,35);
-        // printRideNumber(14);
-        // printRideNumber(10,16);
-        // getNextRide();
-        // updateTrip(13,30);
-        // printRideNumber(13);
-        // getNextRide();
-        // printRideNumber(12);
-        // cancelRide(19);
-        // insertData(16,60,45);
-        // insertData(17,70,25);
-        // updateTrip(16,60);
-        // getNextRide();
-        // printRideNumber(11);
-        // printRideNumber(16,18);
-        // insertData(18,65,130);
-        // insertData(12,40,30);
-        // insertData(8,60,97);
-        // updateTrip(16,82);
-        // insertData(20,16,75);
-        // updateTrip(18,300);
-        // printRideNumber(23);
-        // printRideNumber(12,21);
-        // cancelRide(12);
-        // getNextRide();
-        // cancelRide(25);
-        // printRideNumber(20,26);
-        // getNextRide();
-        // updateTrip(16,124);
-        // insertData(7,125,54);
-        // getNextRide();
-        // printRideNumber(16);
-        // insertData(22,80,85);
-        // insertData(15,90,85);
-        // updateTrip(22,195);
-        // getNextRide();
-        // insertData(23,49,46);
-        // insertData(1,56,85);
-        // updateTrip(16,300);
-        // getNextRide();
-        // printRideNumber(1,30);
-        // cancelRide(1);
-        // getNextRide();
-        // getNextRide();
-        // insertData(24,21,46);
-        // insertData(17,12,37);
-        // getNextRide();
-        // printRideNumber(16);
-        // insertData(24,80,85);
-        // insertData(15,90,85);
-        // cancelRide(28);
-        // updateTrip(23,450);
-        // getNextRide();
-        // printRideNumber(24);
-        // printRideNumber(22,26);
-        // cancelRide(29);
-        // printRideNumber(28);
+        // GetNextRide();
+        // UpdateTrip(6,95);
+        // Print(6);
+        // Print(5,9);
+        // GetNextRide();
+        // CancelRide(7);
+        // Print(7);
+        // Insert(11,70,170);
+        // GetNextRide();
+        // Insert(12,80,200);
+        // Print(12);
+        // UpdateTrip(11,210);
+        // GetNextRide();
+        // CancelRide(14);
+        // UpdateTrip(12,190);
+        // Insert(13,70,220);
+        // GetNextRide();
+        // Insert(14,100,40);
+        // UpdateTrip(14,100);
+        // CancelRide(12);
+        // Print(11,14);
+        // GetNextRide();
+        // Insert(15,20,35);
+        // Print(14);
+        // Print(10,16);
+        // GetNextRide();
+        // UpdateTrip(13,30);
+        // Print(13);
+        // GetNextRide();
+        // Print(12);
+        // CancelRide(19);
+        // Insert(16,60,45);
+        // Insert(17,70,25);
+        // UpdateTrip(16,60);
+        // GetNextRide();
+        // Print(11);
+        // Print(16,18);
+        // Insert(18,65,130);
+        // Insert(12,40,30);
+        // Insert(8,60,97);
+        // UpdateTrip(16,82);
+        // Insert(20,16,75);
+        // UpdateTrip(18,300);
+        // Print(23);
+        // Print(12,21);
+        // CancelRide(12);
+        // GetNextRide();
+        // CancelRide(25);
+        // Print(20,26);
+        // GetNextRide();
+        // UpdateTrip(16,124);
+        // Insert(7,125,54);
+        // GetNextRide();
+        // Print(16);
+        // Insert(22,80,85);
+        // Insert(15,90,85);
+        // UpdateTrip(22,195);
+        // GetNextRide();
+        // Insert(23,49,46);
+        // Insert(1,56,85);
+        // UpdateTrip(16,300);
+        // GetNextRide();
+        // Print(1,30);
+        // CancelRide(1);
+        // GetNextRide();
+        // GetNextRide();
+        // Insert(24,21,46);
+        // Insert(17,12,37);
+        // GetNextRide();
+        // Print(16);
+        // Insert(24,80,85);
+        // Insert(15,90,85);
+        // CancelRide(28);
+        // UpdateTrip(23,450);
+        // GetNextRide();
+        // Print(24);
+        // Print(22,26);
+        // CancelRide(29);
+        // Print(28);
         
+
+
+
+
+        try
+        {
+            Files.write(Paths.get("output.txt"), sb.toString().getBytes());
+
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception");
+        }
 
 
     }
