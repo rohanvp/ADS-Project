@@ -48,16 +48,17 @@ class MinHeap {
         // heapSize=minHeapList.size();
         // heapSize+=1;
         currIndex=lastIndex;
+        // System.out.println(9);  
         // minHeapList.add(newRide);
-
         // CHECKING IF MIN HEAP PROPERTIES ARE INTACT. SWAP ELEMENTS IF PROPERTY IS VIOLATED
-        while(currIndex!=0 && minheapRideArray[(currIndex-1)/2].rideCost>=minheapRideArray[currIndex].rideCost)
+        while(currIndex>0 && minheapRideArray[(currIndex-1)/2].rideCost>=minheapRideArray[currIndex].rideCost)
         {   
+            // System.out.println(3);  
             int parent=(currIndex-1)/2;
-            MinHeapRide temp=minheapRideArray[currIndex];
+            MinHeapRide temp=minheapRideArray[parent];
             if(minheapRideArray[(currIndex-1)/2].rideCost==minheapRideArray[currIndex].rideCost)
             {   
-
+                // System.out.println(1);
                 if(minheapRideArray[parent].tripDuration>minheapRideArray[currIndex].tripDuration)
                 {
                     // minHeapList.set(parent,minheapRideArray[currIndex]);
@@ -65,25 +66,34 @@ class MinHeap {
                     minheapRideArray[parent].objectCurrIndex=parent;
                     // minHeapList.set(currIndex, temp);
                     minheapRideArray[currIndex]=temp;
-                    if(currIndex!=-1)
+                    // if(currIndex!=-1)
                         minheapRideArray[currIndex].objectCurrIndex=currIndex;
                     currIndex=parent;
                 }
+                else
+                {
+                    currIndex--;
+                }
             }
             else if(minheapRideArray[(currIndex-1)/2].rideCost>minheapRideArray[currIndex].rideCost)
-            {
+            {   
+                // System.out.println(2);
                 // minHeapList.set(parent,minheapRideArray[currIndex]);
                 minheapRideArray[parent]=minheapRideArray[currIndex];
                 minheapRideArray[parent].objectCurrIndex=parent;
                 // minHeapList.set(currIndex, temp);
                 minheapRideArray[currIndex]=temp;
-                if(currIndex!=-1)
+                // if(currIndex!=-1)
                         minheapRideArray[currIndex].objectCurrIndex=currIndex;
                 currIndex=parent;
             }
+            else
+            {   
+                // System.out.println(4);
+                currIndex--;
+            }
             // System.out.println(currIndex);
             
-
         }
         MinHeapRide newRide=minheapRideArray[currIndex];
         newRide.objectCurrIndex=currIndex;
@@ -119,6 +129,7 @@ class MinHeap {
         if(lastIndex!=-1)   
         {
             minHeapify(node.objectCurrIndex);
+            // System.out.println(4);
             // heapSize-=1;
         }
         return;
@@ -134,7 +145,7 @@ class MinHeap {
             return null;
         }
         if(lastIndex==0)
-        {
+        {   
             MinHeapRide nextRideNumber=minheapRideArray[0];
             minheapRideArray[lastIndex]=null;
             lastIndex--;
@@ -144,8 +155,6 @@ class MinHeap {
             return nextRideNumber;
         }
         MinHeapRide nextRideNumber=minheapRideArray[0];
-        
-        // System.out.println(minHeapList);
         
         // System.out.println(minHeapList);
         // minHeapList.set(0,minHeapList.get(minHeapList.size()-1));
@@ -180,89 +189,142 @@ class MinHeap {
 
     public static void minHeapify(int ci)
     {   
-        MinHeapRide smallest=minheapRideArray[ci];
-        int smallestIndex=ci;
-        if((ci*2+1)<=lastIndex && smallest.rideCost>=minheapRideArray[ci*2+1].rideCost)
+        if((ci*2)+1>lastIndex && (ci*2)+2>lastIndex)
         {
-            if(smallest.rideCost==minheapRideArray[ci*2+1].rideCost)
-            {   
-                if(smallest.tripDuration>minheapRideArray[ci*2+1].tripDuration)
+            return;
+        }
+        MinHeapRide smallest=minheapRideArray[ci];
+        // int smallestIndex=ci;
+        int swapIndex=ci;
+
+        if((ci*2)+2<=lastIndex)
+        {
+            swapIndex=minheapRideArray[(ci*2)+1].rideCost<minheapRideArray[(ci*2)+2].rideCost?(ci*2+1):(ci*2+2);
+        }
+        else
+        {
+            swapIndex=(ci*2+1);
+        }
+        
+        if((ci*2+1)<=lastIndex || (ci*2+2)<=lastIndex)
+        {
+            if(ci*2+2<=lastIndex)
+            {
+                if(minheapRideArray[ci].rideCost>=minheapRideArray[(ci*2)+2].rideCost)
                 {
-                    // minHeapList.set(ci,minHeapList.get(ci*2+1));
-                    minheapRideArray[ci]=minheapRideArray[ci*2+1];
-                    if(ci!=-1)
-                        minheapRideArray[ci].objectCurrIndex=ci;
-                    // minHeapList.get(ci).objectCurrIndex=ci;
-                    // minHeapList.set(ci*2+1, smallest);
-                    minheapRideArray[ci*2+1]=smallest;
-                    if(ci!=-1)
-                        minheapRideArray[ci*2+1].objectCurrIndex=ci*2+1;
-                    // minHeapList.get(ci*2+1).objectCurrIndex=ci*2+1;
-                    smallest=minheapRideArray[ci*2+1];
-                    // smallest=minHeapList.get(ci*2+1);
-                    smallestIndex=(ci*2)+1;
+                    swapRides(ci,swapIndex);
+                    minHeapify(swapIndex);
                 }
             }
             else
             {
-                // minHeapList.set(ci,minHeapList.get(ci*2+1));
-                minheapRideArray[ci]=minheapRideArray[ci*2+1];
-                if(ci!=-1)
-                    minheapRideArray[ci].objectCurrIndex=ci;
-                // minHeapList.get(ci).objectCurrIndex=ci;
-                minheapRideArray[ci*2+1]=smallest;
-                // minHeapList.set(ci*2+1, smallest);
-                if(ci!=-1)
-                    minheapRideArray[ci*2+1].objectCurrIndex=ci*2+1;
-                // minHeapList.get(ci*2+1).objectCurrIndex=ci*2+1;
-            }
-
-        }
-        else if((ci*2+2)<=lastIndex && smallest.rideCost>=minheapRideArray[ci*2+2].rideCost)
-        {   
-            if(smallest.rideCost==(minheapRideArray[ci*2+2].rideCost))
-            {   
-                if(smallest.tripDuration>minheapRideArray[ci*2+2].tripDuration)
+                if(minheapRideArray[ci].rideCost>=minheapRideArray[(ci*2)+1].rideCost)
                 {
-                    // minHeapList.set(ci,minHeapList.get((ci*2+2)));
-                    minheapRideArray[ci]=minheapRideArray[ci*2+2];
-                    // minHeapList.get(ci).objectCurrIndex=ci;
-                    if(ci!=-1)
-                        minheapRideArray[ci].objectCurrIndex=ci;
-                    minheapRideArray[ci*2+2]=smallest;
-                    // minHeapList.set((ci*2+2), smallest);
-                    // minHeapList.get((ci*2+2)).objectCurrIndex=(ci*2+2);
-                    if(ci!=-1)
-                        minheapRideArray[ci*2+2].objectCurrIndex=(ci*2+2);
-                    smallest=minheapRideArray[(ci*2+2)];
-                    smallestIndex=(ci*2+2);
+                    swapRides(ci,swapIndex);
+                    minHeapify(swapIndex);
                 }
             }
-            else
-            {   
-                if(ci<=lastIndex)
-                {   
-                    // minHeapList.set(ci,minHeapList.get((ci*2+2)));
-                    // minHeapList.get(ci).objectCurrIndex=ci;
-                    // minHeapList.set((ci*2+2), smallest);
-                    // minHeapList.get((ci*2+2)).objectCurrIndex=(ci*2+2);
 
-                    minheapRideArray[ci]=minheapRideArray[(ci*2)+2];
-                    if(ci!=-1)
-                        minheapRideArray[ci].objectCurrIndex=ci;
-                    minheapRideArray[(ci*2)+2]=smallest;
-                    minheapRideArray[ci*2+2].objectCurrIndex=ci*2+2;
-
-                }
-                
-            }
+            
         }
         
-        if(smallestIndex!=ci)
-            minHeapify(smallestIndex);
+
+
+
+        // if((ci*2+1)<=lastIndex && smallest.rideCost>=minheapRideArray[ci*2+1].rideCost)
+        // {
+        //     if(smallest.rideCost==minheapRideArray[ci*2+1].rideCost)
+        //     {   
+        //         if(smallest.tripDuration>minheapRideArray[ci*2+1].tripDuration)
+        //         {
+        //             // minHeapList.set(ci,minHeapList.get(ci*2+1));
+        //             minheapRideArray[ci]=minheapRideArray[ci*2+1];
+        //             // if(ci!=-1)
+        //                 minheapRideArray[ci].objectCurrIndex=ci;
+        //             // minHeapList.get(ci).objectCurrIndex=ci;
+        //             // minHeapList.set(ci*2+1, smallest);
+        //             minheapRideArray[ci*2+1]=smallest;
+        //             // if(ci!=-1)
+        //                 minheapRideArray[ci*2+1].objectCurrIndex=ci*2+1;
+        //             // minHeapList.get(ci*2+1).objectCurrIndex=ci*2+1;
+        //             smallest=minheapRideArray[ci*2+1];
+        //             // smallest=minHeapList.get(ci*2+1);
+        //             // smallestIndex=(ci*2)+1;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         // minHeapList.set(ci,minHeapList.get(ci*2+1));
+        //         minheapRideArray[ci]=minheapRideArray[ci*2+1];
+        //         // if(ci!=-1)
+        //             minheapRideArray[ci].objectCurrIndex=ci;
+        //         // minHeapList.get(ci).objectCurrIndex=ci;
+        //         minheapRideArray[ci*2+1]=smallest;
+        //         // minHeapList.set(ci*2+1, smallest);
+        //         // if(ci!=-1)
+        //             minheapRideArray[ci*2+1].objectCurrIndex=ci*2+1;
+        //         // minHeapList.get(ci*2+1).objectCurrIndex=ci*2+1;
+        //     }
+        //     minHeapify(ci*2+1);
+
+        // }
+        // if((ci*2+2)<=lastIndex && smallest.rideCost>=minheapRideArray[ci*2+2].rideCost)
+        // {   
+        //     if(smallest.rideCost==(minheapRideArray[ci*2+2].rideCost))
+        //     {   
+        //         if(smallest.tripDuration>minheapRideArray[ci*2+2].tripDuration)
+        //         {
+        //             // minHeapList.set(ci,minHeapList.get((ci*2+2)));
+        //             minheapRideArray[ci]=minheapRideArray[ci*2+2];
+        //             // minHeapList.get(ci).objectCurrIndex=ci;
+        //             // if(ci!=-1)
+        //                 minheapRideArray[ci].objectCurrIndex=ci;
+        //             minheapRideArray[ci*2+2]=smallest;
+        //             // minHeapList.set((ci*2+2), smallest);
+        //             // minHeapList.get((ci*2+2)).objectCurrIndex=(ci*2+2);
+        //             // if(ci!=-1)
+        //                 minheapRideArray[ci*2+2].objectCurrIndex=(ci*2+2);
+        //             smallest=minheapRideArray[(ci*2+2)];
+        //             // smallestIndex=(ci*2+2);
+        //         }
+        //     }
+        //     else
+        //     {   
+        //         if(ci<=lastIndex)
+        //         {   
+        //             // minHeapList.set(ci,minHeapList.get((ci*2+2)));
+        //             // minHeapList.get(ci).objectCurrIndex=ci;
+        //             // minHeapList.set((ci*2+2), smallest);
+        //             // minHeapList.get((ci*2+2)).objectCurrIndex=(ci*2+2);
+
+        //             minheapRideArray[ci]=minheapRideArray[(ci*2)+2];
+        //             // if(ci!=-1)
+        //                 minheapRideArray[ci].objectCurrIndex=ci;
+        //             minheapRideArray[(ci*2)+2]=smallest;
+        //             minheapRideArray[ci*2+2].objectCurrIndex=ci*2+2;
+
+        //         }
+                
+        //     }
+        //     minHeapify(ci*2+2);
+        // }
+        
+        // if(smallestIndex!=ci)
+        //     minHeapify(smallestIndex);
 
         
     }
+
+    public static void swapRides(int x,int y)
+    {
+        MinHeapRide temp=minheapRideArray[x];
+        minheapRideArray[x]=minheapRideArray[y];
+        minheapRideArray[y]=temp;
+        minheapRideArray[x].objectCurrIndex=x;
+        minheapRideArray[y].objectCurrIndex=y;
+
+    }
+
     // MIN HEAP IMPLEMENTATION
 
     public static void printElementsMinHeap()
@@ -334,7 +396,6 @@ class Rbt {
         
         RbtRide RbtRideTempPtr=bstInsert(rideNumber,rideCost,tripDuration);
         if(RbtRideTempPtr==null) return null;
-        // System.out.println(0);
         root.color=0;
         return RbtRideTempPtr;
     }
@@ -872,7 +933,7 @@ public class GatorTaxi {
                 {
                     System.out.println("Exception");
                 }
-                // System.exit(0);
+                System.exit(0);
             }
             catch(Exception e)
             {
@@ -1117,12 +1178,15 @@ public class GatorTaxi {
         // // printElements();
         Insert(10,60,150);
         GetNextRide();
+
+
+
         CancelRide(5);
-        // System.out.println(Rbt.root.rideNumber);
-        // printElements();
+        // // System.out.println(Rbt.root.rideNumber);
+        // // printElements();
         UpdateTrip(3,22);
         Insert(9,55,110);
-        // // // // printElements();
+        // // // // // printElements();
         GetNextRide();
         UpdateTrip(6,95);
         Print(6);
@@ -1203,20 +1267,17 @@ public class GatorTaxi {
         Print(22,26);
         CancelRide(29);
         Print(28);
-        
 
 
+        try
+        {
+            Files.write(Paths.get("output.txt"), sb.toString().getBytes());
 
-
-        // try
-        // {
-        //     Files.write(Paths.get("output.txt"), sb.toString().getBytes());
-
-        // }
-        // catch(Exception e)
-        // {
-        //     System.out.println("Exception");
-        // }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception");
+        }
 
 
     }
