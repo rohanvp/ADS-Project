@@ -39,6 +39,17 @@ public class Rbt {
         root.color=0;
     }
 
+    public static RbtRide searchLowest(RbtRide node)
+    {
+        RbtRide curr=node;
+        while(curr.left!=null)
+        {
+            curr=curr.left;
+        }
+        return curr;
+
+    }
+
     private static void bstInsert(int rideNumber,int rideCost,int tripDuration)
     {   
         // INSERT THE NEW NODE AS A RED NODE BY DEFAULT
@@ -48,36 +59,36 @@ public class Rbt {
         node.parent=null;
         node.color=1;
 
-        RbtRide y=null;
-        RbtRide x=root;
+        RbtRide pp=null;
+        RbtRide p=root;
 
-        while(x!=null)
+        while(p!=null)
         {   
-            y=x;
-            if(x.rideNumber>node.rideNumber)
+            pp=p;
+            if(p.rideNumber>node.rideNumber)
             {
-                x=x.left;
+                p=p.left;
             }
             else
             {
-                x=x.right;
+                p=p.right;
             }
             
         }
 
-        node.parent=y;
+        node.parent=pp;
 
-        if(y==null) 
+        if(pp==null) 
         {
             root=node;
         }
-        else if(node.rideNumber>y.rideNumber)
+        else if(node.rideNumber>pp.rideNumber)
         {
-            y.right=node;
+            pp.right=node;
         }
         else
         {
-            y.left=node;
+            pp.left=node;
         }
 
         if(node.parent==null)
@@ -87,78 +98,82 @@ public class Rbt {
         }
         if(node.parent.parent==null) return;
         
-        insertColorBalance(node);
+        insertBalance(node);
 
         root.color=0;
         
     }
 
-    private static void insertColorBalance(RbtRide x)
+    private static void insertBalance(RbtRide p)
     {
         RbtRide d=null;
-        while(x.parent.color==1)
+        while(p.parent.color==1)
         {
-            if(x.parent==x.parent.parent.right)
+            if(p.parent==p.parent.parent.right)
             {   
-                d=x.parent.parent.left;
+                d=p.parent.parent.left;
                 if(d==null) 
                 {   
-                    rotateRR(x.parent.parent);
-                    x.parent.color=0;
-                    x.parent.left.color=1;
+                    rotateRR(p.parent.parent);
+                    p.parent.color=0;
+                    p.parent.left.color=1;
                     return;
                 }
                 if(d.color==1)
                 {   
 
-                    x.parent.color=0;
+                    p.parent.color=0;
                     d.color=0;
-                    x.parent.parent.color=1;
-                    x=x.parent.parent;
+                    p.parent.parent.color=1;
+                    p=p.parent.parent;
                 }
                 else
                 {
-                    if(x==x.parent.left)
+                    if(p==p.parent.left)
                     {   
-                        x=x.parent;
-                        rotateLL(x);
+                        p=p.parent;
+                        rotateLL(p);
                     }
-                    x.parent.color=1;
-                    x.parent.parent.color=1;
-                    rotateRR(x.parent.parent);
+                    p.parent.color=1;
+                    p.parent.parent.color=1;
+                    rotateRR(p.parent.parent);
                 }
             }
             else
             {   
-                d=x.parent.parent.right;
+                d=p.parent.parent.right;
                 if(d==null) 
                 {
-                    rotateLL(x.parent.parent);
-                    x.parent.color=0;
-                    x.parent.right.color=1;
+                    rotateLL(p.parent.parent);
+                    p.parent.color=0;
+                    p.parent.right.color=1;
                     return;
                 }
                 if(d.color==1)
                 {
-                    x.parent.color=0;
+                    p.parent.color=0;
                     d.color=0;
-                    x.parent.parent.color=1;
-                    x=x.parent.parent;
+                    p.parent.parent.color=1;
+                    p=p.parent.parent;
                 }
                 else
                 {
-                    if(x==x.parent.right)
+                    if(p==p.parent.right)
                     {
-                        x=x.parent;
-                        rotateRR(x);
+                        p=p.parent;
+                        rotateRR(p);
                     }
-                    x.parent.color=1;
-                    x.parent.parent.color=1;
-                    rotateLL(x.parent.parent);
+                    p.parent.color=1;
+                    p.parent.parent.color=1;
+                    rotateLL(p.parent.parent);
                 }
             }
 
-            if(x==root) break;
+            if(p==root) 
+            {   
+                root.color=0;
+                break;
+            }
         }  
 
     }
@@ -439,17 +454,25 @@ public class Rbt {
     public static void main(String[] args) {
 
         insertRide(9,76,31);
-        // insertRide(25, 98, 46);
+        insertRide(25, 98, 46);
         insertRide(42,17,89);
         insertRide(53,97,22); 
         insertRide(96,28,82);
         insertRide(73,28,56);
         insertRide(20,49,59);
-
-        // insertRide(62,7,10);
+        insertRide(62,7,10);
         // bstDelete(42);
+        // printElements(root);
+        insertRide(5,50,120);
+        insertRide(4,30,60);
+        insertRide(7,40,90);
+        insertRide(3,20,40);
+        insertRide(1,10,20);
+        insertRide(6,35,70);
+        insertRide(8,45,100);
         printElements(root);
-        // System.out.println(root.right.right.rideNumber);
+
+        System.out.println(root.right.right.rideNumber);
         
     }
     

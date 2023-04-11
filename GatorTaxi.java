@@ -39,67 +39,140 @@ class MinHeap {
     public static MinHeapRide[] minheapRideArray=new MinHeapRide[2000];
 
     // MIN HEAP INSERT NEW RIDE
-    public static MinHeapRide insertRide(int rideNumber,int rideCost,int tripDuration)
+    public static int insertRide(int rideNumber,int rideCost,int tripDuration)
     {   
         lastIndex++;
         minheapRideArray[lastIndex]=new MinHeapRide(rideNumber,rideCost,tripDuration);
-        // MinHeapRide newRide=new MinHeapRide(rideNumber, rideCost, tripDuration);
-        // heapSize++;
-        // heapSize=minHeapList.size();
-        // heapSize+=1;
         currIndex=lastIndex;
-        // System.out.println(9);  
-        // minHeapList.add(newRide);
+
         // CHECKING IF MIN HEAP PROPERTIES ARE INTACT. SWAP ELEMENTS IF PROPERTY IS VIOLATED
-        while(currIndex>0 && minheapRideArray[(currIndex-1)/2].rideCost>=minheapRideArray[currIndex].rideCost)
+        while(currIndex>0)
         {   
             // System.out.println(3);  
-            int parent=(currIndex-1)/2;
-            MinHeapRide temp=minheapRideArray[parent];
-            if(minheapRideArray[(currIndex-1)/2].rideCost==minheapRideArray[currIndex].rideCost)
-            {   
-                // System.out.println(1);
-                if(minheapRideArray[parent].tripDuration>minheapRideArray[currIndex].tripDuration)
-                {
-                    // minHeapList.set(parent,minheapRideArray[currIndex]);
-                    minheapRideArray[parent]=minheapRideArray[currIndex];
-                    minheapRideArray[parent].objectCurrIndex=parent;
-                    // minHeapList.set(currIndex, temp);
-                    minheapRideArray[currIndex]=temp;
-                    // if(currIndex!=-1)
-                        minheapRideArray[currIndex].objectCurrIndex=currIndex;
-                    currIndex=parent;
-                }
-                else
-                {
-                    currIndex--;
-                }
-            }
-            else if(minheapRideArray[(currIndex-1)/2].rideCost>minheapRideArray[currIndex].rideCost)
-            {   
-                // System.out.println(2);
-                // minHeapList.set(parent,minheapRideArray[currIndex]);
-                minheapRideArray[parent]=minheapRideArray[currIndex];
-                minheapRideArray[parent].objectCurrIndex=parent;
-                // minHeapList.set(currIndex, temp);
-                minheapRideArray[currIndex]=temp;
-                // if(currIndex!=-1)
-                        minheapRideArray[currIndex].objectCurrIndex=currIndex;
-                currIndex=parent;
-            }
-            else
-            {   
-                // System.out.println(4);
-                currIndex--;
-            }
+            // int parent=(currIndex-1)/2;
+          
+            insertMinHeapify(currIndex);
+            
+            // if(minheapRideArray[(currIndex-1)/2].rideCost==minheapRideArray[currIndex].rideCost)
+            // {   
+            //     // System.out.println(1);
+            //     MinHeapRide temp=minheapRideArray[parent];
+            //     if(minheapRideArray[parent].tripDuration>minheapRideArray[currIndex].tripDuration)
+            //     {
+            //         // minHeapList.set(parent,minheapRideArray[currIndex]);
+            //         minheapRideArray[parent]=minheapRideArray[currIndex];
+            //         minheapRideArray[parent].objectCurrIndex=parent;
+            //         // minHeapList.set(currIndex, temp);
+            //         minheapRideArray[currIndex]=temp;
+            //         // if(currIndex!=-1)
+            //             minheapRideArray[currIndex].objectCurrIndex=currIndex;
+            //         currIndex=parent;
+            //     }
+            //     else
+            //     {
+            //         currIndex--;
+            //     }
+            // }
+            // else if(minheapRideArray[(currIndex-1)/2].rideCost>minheapRideArray[currIndex].rideCost)
+            // {   
+            //     // System.out.println(2);
+            //     // minHeapList.set(parent,minheapRideArray[currIndex]);
+            //     // minheapRideArray[parent]=minheapRideArray[currIndex];
+            //     // minheapRideArray[parent].objectCurrIndex=parent;
+            //     // // minHeapList.set(currIndex, temp);
+            //     // minheapRideArray[currIndex]=temp;
+            //     // // if(currIndex!=-1)
+            //     //         minheapRideArray[currIndex].objectCurrIndex=currIndex;
+            //     // currIndex=parent;
+            //     // MinHeapRide temp=minheapRideArray[parent];
+            //     // int tempIndex=minheapRideArray[parent].objectCurrIndex;
+            //     // minheapRideArray[parent]=minheapRideArray[currIndex];
+            //     // minheapRideArray[parent].objectCurrIndex=tempIndex;
+            //     // tempIndex=minheapRideArray[currIndex].objectCurrIndex;
+            //     // minheapRideArray[currIndex]=temp;
+            //     // minheapRideArray[currIndex].objectCurrIndex=tempIndex;
+            //     swapRides(parent, currIndex);
+
+            // }
+            // else
+            // {   
+            //     // System.out.println(4);
+            //     currIndex--;
+            // }
             // System.out.println(currIndex);
+            currIndex--;
             
         }
-        MinHeapRide newRide=minheapRideArray[currIndex];
-        newRide.objectCurrIndex=currIndex;
+        // MinHeapRide newRide=minheapRideArray[currIndex];
+        // newRide.objectCurrIndex=currIndex;
+        
         // System.out.println(currIndex);
-        return newRide;
+        return currIndex;
 
+    }
+
+    public static void tempDeleteRide(int rideNumber)
+    {   
+        if(rideNumber==9)
+            System.out.println(9);
+        if(lastIndex==-1)
+            return;
+        int del=0;
+        for(int i=0;i<=lastIndex;i++)
+        {
+            if(minheapRideArray[i].rideNumber==rideNumber)
+            {   
+                del=i;
+                break;
+            }
+        }
+
+        MinHeapRide temp1=minheapRideArray[del];
+        MinHeapRide temp2=minheapRideArray[lastIndex];
+        int tempIndex=-1;
+
+        // temp1.rbtPtr.minheapPtr=null;
+        tempIndex=minheapRideArray[del].objectCurrIndex;
+        minheapRideArray[del]=minheapRideArray[lastIndex];
+        minheapRideArray[del].objectCurrIndex=tempIndex;
+        lastIndex--;
+        minHeapify(del);
+    }
+
+    public static void insertMinHeapify(int curr)
+    {   
+        
+        int parent=(curr-1)/2;
+
+        if(minheapRideArray[parent].rideCost>=minheapRideArray[curr].rideCost)
+        {
+            if(minheapRideArray[parent].rideCost==minheapRideArray[curr].rideCost)
+            {
+                if(minheapRideArray[parent].tripDuration>minheapRideArray[curr].tripDuration)
+                {
+                    swapRides(parent,curr);
+                }
+            }
+            else
+            {
+                swapRides(parent, curr);
+            }
+        }
+
+        if(parent>0)
+        {
+            insertMinHeapify(parent);
+        }
+    }
+
+    public static MinHeapRide minHeapSearch(int rideNumber)
+    {
+        for(int i=0;i<=lastIndex;i++)
+        {
+            if(minheapRideArray[i].rideNumber==rideNumber) return minheapRideArray[i];
+        }
+
+        return null;
     }
 
     public static void deleteRide(MinHeapRide node)
@@ -107,7 +180,7 @@ class MinHeap {
         
         if(lastIndex<=-1)//chaned 0 to -1 
         {
-            GatorTaxi.sb.append("("+"0,"+"0,"+"0)"+"\n");
+            gatorTaxi.sb.append("("+"0,"+"0,"+"0)"+"\n");
             return;
         }
         if(lastIndex==0)
@@ -141,7 +214,7 @@ class MinHeap {
         if(lastIndex==-1) 
         {
             // System.out.println("No Active Rides");
-            GatorTaxi.sb.append("No Active Rides"+"\n");
+            gatorTaxi.sb.append("No Active Rides"+"\n");
             return null;
         }
         if(lastIndex==0)
@@ -317,11 +390,32 @@ class MinHeap {
 
     public static void swapRides(int x,int y)
     {
-        MinHeapRide temp=minheapRideArray[x];
-        minheapRideArray[x]=minheapRideArray[y];
-        minheapRideArray[y]=temp;
-        minheapRideArray[x].objectCurrIndex=x;
-        minheapRideArray[y].objectCurrIndex=y;
+        if(minheapRideArray[x].rideCost>=minheapRideArray[y].rideCost)
+        {
+            if(minheapRideArray[x].rideCost==minheapRideArray[y].rideCost)
+            {
+                if(minheapRideArray[x].tripDuration>minheapRideArray[y].tripDuration)
+                {
+                    MinHeapRide temp=minheapRideArray[x];
+                    minheapRideArray[x]=minheapRideArray[y];
+                    minheapRideArray[y]=temp;
+                    minheapRideArray[x].objectCurrIndex=x;
+                    minheapRideArray[y].objectCurrIndex=y;
+                }
+                else
+                {
+                    // NO ACTION NEEDED
+                }
+            }
+            else
+            {
+                MinHeapRide temp=minheapRideArray[x];
+                minheapRideArray[x]=minheapRideArray[y];
+                minheapRideArray[y]=temp;
+                minheapRideArray[x].objectCurrIndex=x;
+                minheapRideArray[y].objectCurrIndex=y;
+            }
+        }
 
     }
 
@@ -335,26 +429,10 @@ class MinHeap {
         }
     }
 
-
-    // public static void main(String[] args) {
-
-    //     insertRide(25, 98, 46);
-    //     insertRide(42,17,89);
-    //     insertRide(9,76,31);
-    //     // printElements();
-    //     getNextRide();
-    //     printElements();
-        
-    // }
 }
 
 
 ////////////////////////////////////////MIN HEAP////////////////////////////////////////
-
-
-
-
-
 
 
 
@@ -395,7 +473,28 @@ class Rbt {
     {   
         
         RbtRide RbtRideTempPtr=bstInsert(rideNumber,rideCost,tripDuration);
-        if(RbtRideTempPtr==null) return null;
+        if(RbtRideTempPtr==null)
+        {    
+            gatorTaxi.sb.append("Duplicate RideNumber");
+            try
+            {
+                Files.write(Paths.get("output.txt"), gatorTaxi.sb.toString().getBytes());
+                try
+                {
+                    Files.write(Paths.get("output.txt"), gatorTaxi.sb.toString().getBytes());
+
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Exception");
+                }
+                System.exit(0);
+            }
+            catch(Exception e)
+            {
+                System.out.println("Exception");
+            }
+        }
         root.color=0;
         return RbtRideTempPtr;
     }
@@ -406,6 +505,18 @@ class Rbt {
         return foundRide;
     }
 
+    // public static RbtRide searchRbtRide(int rideNumber)
+    // {
+    //     RbtRide curr=root;
+    //     while(curr!=null)
+    //     {
+    //         if(curr.rideNumber==rideNumber)
+    //         {
+
+    //         }
+    //     }
+    // }
+
     private static RbtRide bstInsert(int rideNumber,int rideCost,int tripDuration)
     {   
         // INSERT THE NEW NODE AS A RED NODE BY DEFAULT
@@ -415,40 +526,40 @@ class Rbt {
         node.parent=null;
         node.color=1;
 
-        RbtRide y=null;
-        RbtRide x=root;
+        RbtRide pp=null;
+        RbtRide p=root;
 
-        while(x!=null)
+        while(p!=null)
         {   
-            y=x;
-            if(x.rideNumber>node.rideNumber)
+            pp=p;
+            if(p.rideNumber==rideNumber)
             {
-                x=x.left;
+                return null;
             }
-            else if(x.rideNumber<node.rideNumber)
+            if(p.rideNumber>node.rideNumber)
             {
-                x=x.right;
+                p=p.left;
             }
             else
             {
-                return null;
+                p=p.right;
             }
             
         }
 
-        node.parent=y;
+        node.parent=pp;
 
-        if(y==null) 
+        if(pp==null) 
         {
             root=node;
         }
-        else if(node.rideNumber>y.rideNumber)
+        else if(node.rideNumber>pp.rideNumber)
         {
-            y.right=node;
+            pp.right=node;
         }
         else
         {
-            y.left=node;
+            pp.left=node;
         }
 
         if(node.parent==null)
@@ -458,7 +569,7 @@ class Rbt {
         }
         if(node.parent.parent==null) return node;
         
-        insertColorBalance(node);
+        insertBalance(node);
 
         root.color=0;
 
@@ -466,86 +577,83 @@ class Rbt {
         
     }
 
-    private static void insertColorBalance(RbtRide x)
+    private static void insertBalance(RbtRide p)
     {
         RbtRide d=null;
-        while(x.parent.color==1)
-        {
-            if(x.parent==x.parent.parent.right)
+        while(p.parent.color==1)
+        {   
+
+
+            if(p.parent==p.parent.parent.right)
             {   
-                d=x.parent.parent.left;
+                d=p.parent.parent.left;
                 if(d==null) 
                 {   
-                    // x=x.parent.parent;//
-                    // rotateRR(x);
-                    // x.parent.color=0;
-                    // x.parent.left.color=1;
-                    // return;
-                    if(x==x.parent.left)
-                    {   
-                        x=x.parent;
-                        rotateLL(x);
-                    }
-                    x.parent.color=0;
-                    x.parent.parent.color=1;
-                    rotateRR(x.parent.parent);
+                    rotateRR(p.parent.parent);
+                    p.parent.color=0;
+                    p.parent.left.color=1;
                     return;
                 }
                 if(d.color==1)
                 {   
 
+                    p.parent.color=0;
                     d.color=0;
-                    x.parent.color=0;
-                    x.parent.parent.color=1;
-                    x=x.parent.parent;
+                    p.parent.parent.color=1;
+                    p=p.parent.parent;
                 }
                 else
                 {
-                    if(x==x.parent.left)
+                    if(p==p.parent.left)
                     {   
-                        x=x.parent;
-                        rotateLL(x);
+                        p=p.parent;
+                        rotateLL(p);
                     }
-                    x.parent.color=0;
-                    x.parent.parent.color=1;
-                    rotateRR(x.parent.parent);
+                    p.parent.color=1;
+                    p.parent.parent.color=1;
+                    rotateRR(p.parent.parent);
                 }
             }
             else
             {   
-                d=x.parent.parent.right;
+                d=p.parent.parent.right;
                 if(d==null) 
-                {   
-                    rotateLL(x.parent.parent);
-                    x.parent.color=0;
-                    x.parent.right.color=1;
+                {
+                    rotateLL(p.parent.parent);
+                    p.parent.color=0;
+                    p.parent.right.color=1;
                     return;
                 }
                 if(d.color==1)
                 {
+                    p.parent.color=0;
                     d.color=0;
-                    x.parent.color=0;
-                    x.parent.parent.color=1;
-                    x=x.parent.parent;
+                    p.parent.parent.color=1;
+                    p=p.parent.parent;
                 }
                 else
                 {
-                    if(x==x.parent.right)
+                    if(p==p.parent.right)
                     {
-                        x=x.parent;
-                        rotateRR(x);
+                        p=p.parent;
+                        rotateRR(p);
                     }
-                    x.parent.color=0;
-                    x.parent.parent.color=1;
-                    
-                    rotateLL(x.parent.parent);
+                    p.parent.color=1;
+                    p.parent.parent.color=1;
+                    rotateLL(p.parent.parent);
                 }
             }
 
-            if(x==root) break;
+            if(p==root) 
+            {   
+                root.color=0;
+                break;
+            }
         }  
 
     }
+
+    
 
     private static RbtRide bstDelete(int rideNumber)
     {
@@ -555,7 +663,7 @@ class Rbt {
         // SEARCHING FOR THE REQUIRED NODE
         while(curr!=null)
         {   
-            // y=curr;
+            
             if(curr.rideNumber==rideNumber) break;
             if(curr.rideNumber>rideNumber)
             {
@@ -575,6 +683,7 @@ class Rbt {
         if(curr.left==null && curr.right==null && curr.parent==null) return curr;
 
         // BEGIN DELETE
+
         RbtRide z=curr;
         RbtRide x,y;
 
@@ -583,17 +692,14 @@ class Rbt {
         if(z.left==null)
         {
             x=z.right;
-
-            RbtRide u=z,v=z.right;
             
-            switchNodes(u,v);
+            switchNodes(z,z.right);
         }
         else if(z.right==null)
         {
             x=z.left;
-            RbtRide u=z,v=z.left;
             
-            switchNodes(u,v);
+            switchNodes(z,z.left);
 
         }
         else
@@ -607,13 +713,19 @@ class Rbt {
             yOg=y.color;
             x=y.right;
             
-    
-            // if(y!=null && y.parent!=null && x!=null && x.parent!=null)
-            if(y!=null && x!=null)
+            if(y.parent==z) 
             {
-                if(y.parent==z) x.parent=y;
+                if(x!=null)
+                    x.parent=y;
+                else
+                {
+                    switchNodes(z,y);
+                }
 
             }
+
+            
+            
             else if(x==null && y!=null && yOg==0)
             {   
                 
@@ -654,14 +766,14 @@ class Rbt {
         }
 
         if (yOg == 0){
-			deleteColorBalance(x);
+			deleteBalance(x);
 		}
 
         return curr;
         
     }
 
-    private static void deleteColorBalance(RbtRide x)
+    private static void deleteBalance(RbtRide x)
     {   
         
         RbtRide s;
@@ -740,44 +852,47 @@ class Rbt {
 			root = c;
 		} else if (p == p.parent.left){
 			p.parent.left = c;
-		} else {
+		} else {    
 			p.parent.right = c;
+
 		}
         if(p!=null && c!=null)
 		    c.parent = p.parent;
     }
 
-    private static void rotateRR(RbtRide y)
-    {   
-        RbtRide x=y.right;
-        y.right=x.left;
-        if(y.left!=null) 
+    private static void rotateRR(RbtRide pp)
+    {       
+        System.out.println(7);
+        RbtRide p=pp.right;
+        pp.right=p.left;
+        if(pp.left!=null) 
         {
-            if(x.left!=null)
-                x.left.parent=y;
+            if(p.left!=null)
+                p.left.parent=pp;
         }
-        x.parent=y.parent;
-        if(y.parent==null) root=x;
-        else if(y==y.parent.left) y.parent.left=x;
-        else y.parent.right=x;
-        x.left=y;
-        y.parent=x;
+        p.parent=pp.parent;
+        if(pp.parent==null) root=p;
+        else if(pp==pp.parent.left) pp.parent.left=p;
+        else pp.parent.right=p;
+        p.left=pp;
+        pp.parent=p;
     }
-    private static void rotateLL(RbtRide y)
-    {
-        RbtRide x=y.left;
-        y.left=x.right;
-        if(y.right!=null) 
+    private static void rotateLL(RbtRide pp)
+    {   
+        System.out.println(6);
+        RbtRide p=pp.left;
+        pp.left=p.right;
+        if(pp.right!=null) 
         {
-            if(x.right!=null)   
-                x.right.parent=y;
+            if(p.right!=null)   
+                p.right.parent=pp;
         }
-        x.parent=y.parent;
-        if(y.parent==null) root=x;
-        else if(y==y.parent.right) y.parent.right=x;
-        else y.parent.left=x;
-        x.right=y;
-        y.parent=x;
+        p.parent=pp.parent;
+        if(pp.parent==null) root=p;
+        else if(pp==pp.parent.right) pp.parent.right=p;
+        else pp.parent.left=p;
+        p.right=pp;
+        pp.parent=p;
 
     }
 
@@ -814,23 +929,6 @@ class Rbt {
         //     System.out.println(curr.parent.rideNumber+" "+curr.parent.rideCost+" "+curr.parent.tripDuration);
         printElements(curr.right);
     }
-
-
-    // public static void main(String[] args) {
-
-    //     insertRide(9,76,31);
-    //     insertRide(25, 98, 46);
-    //     insertRide(42,17,89);
-    //     insertRide(53,97,22); 
-    //     insertRide(96,28,82);
-    //     insertRide(73,28,56);
-    //     insertRide(20,49,59);
-    //     insertRide(62,7,10);
-    //     bstDelete(73);
-    //     printElements(root);
-        
-        
-    // }
     
 }
 
@@ -843,16 +941,19 @@ class Rbt {
 ////////////////////////////////////////GATOR TAXI////////////////////////////////////////
 
 
-public class GatorTaxi {    
+public class gatorTaxi {    
+
+    HashMap<Integer,MinHeapRide> minHeapMap=new HashMap<>();
+    HashMap<Integer,RbtRide> rbtMap=new HashMap<>();
 
     // STRING BUILDER FUNCTION TO STORE THE STRING WE WANT TO PRINT
     static StringBuilder sb=new StringBuilder();
 
-    // THIS METHOD RECURSIVELY STORES THE RIDE VALUES IN sb IN RANGE BETWEEN ride1 and ride2
-    private static void rangedPrint(RbtRide ride, int ride1, int ride2) {
+    // THIS METHOD STORES THE RIDE VALUES IN sb IN RANGE BETWEEN ride1 and ride2
+    private static RbtRide rangedPrint(RbtRide ride, int ride1, int ride2) {
          
         if (ride == null) {
-            return;
+            return null;
         }
  
         if (ride1 < ride.rideNumber) 
@@ -867,6 +968,8 @@ public class GatorTaxi {
         }
  
         rangedPrint(ride.right, ride1, ride2);
+
+        return ride;
 
     }
 
@@ -901,7 +1004,11 @@ public class GatorTaxi {
     // PRINT RIDE NUMBER BETWEEN SPECIFIED RANGE
     private static void Print(int rideNumber1,int rideNumber2) {
 
-        rangedPrint(Rbt.root,rideNumber1,rideNumber2);
+        RbtRide temp1=rangedPrint(Rbt.root,rideNumber1,rideNumber2);
+        if(temp1==null)
+        {
+            sb.append("(0,0,0)\n");
+        }
         String temp=sb.toString();
         char c=temp.charAt(temp.length()-1);
         if(c==',')
@@ -916,8 +1023,10 @@ public class GatorTaxi {
     // INSERT SPECIFIED DATA INTO RBT AND MINHEAP SERIALLY.
     private static void Insert(int rideNumber,int rideCost,int tripDuration) {
 
+
+
         RbtRide newRbtRidePtr=Rbt.insertRide(rideNumber, rideCost, tripDuration);
-        if(newRbtRidePtr==null)
+        if(newRbtRidePtr.rideNumber==-1)
         {   
             // System.out.println("Duplicate RideNumber");
             sb.append("Duplicate RideNumber");
@@ -943,10 +1052,17 @@ public class GatorTaxi {
         }
         else
         {
-            MinHeapRide newMinHeapRidePtr=MinHeap.insertRide(rideNumber, rideCost, tripDuration);
-            newMinHeapRidePtr.rbtPtr=newRbtRidePtr;
-            newRbtRidePtr.minheapPtr=newMinHeapRidePtr;
+            int minHeapIndex=MinHeap.insertRide(rideNumber, rideCost, tripDuration);
+            MinHeap.minheapRideArray[minHeapIndex].rbtPtr=newRbtRidePtr;
+            newRbtRidePtr.minheapPtr=MinHeap.minheapRideArray[minHeapIndex];
         }
+
+
+        // MinHeapRide newMinHeapRidePtr=MinHeap.insertRide(rideNumber, rideCost, tripDuration);
+
+        ////////////////////////////////////////////////////////////////////////
+        // MinHeap.insertRide(rideNumber, rideCost, tripDuration);
+        ////////////////////////////////////////////////////////////////////////
         
 
     }
@@ -954,6 +1070,10 @@ public class GatorTaxi {
     // FETCH NEXT RIDE FROM MINHEAP IN O(1) TIME. FETCH THE SAME RIDE IN RBT IN O(1) USING POINTER. DELETE RIDE AFTER SUCCESSFULL FETCH.
     private static void GetNextRide() {
         
+        ////////////////////////////////////////////////////////////////////////
+        // MinHeap.tempDeleteRide(MinHeap.minheapRideArray[0].rideNumber);
+        ////////////////////////////////////////////////////////////////////////
+
         MinHeapRide minHeapRide=MinHeap.getNextRide();
         if(minHeapRide!=null)
         {   
@@ -977,7 +1097,15 @@ public class GatorTaxi {
 
         RbtRide node=Rbt.deleteRide(rideNumber);
         if(node!=null)
-            MinHeap.deleteRide(node.minheapPtr);
+        {
+            // MinHeap.deleteRide(node.minheapPtr);
+            MinHeap.tempDeleteRide(rideNumber);
+
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        // MinHeap.tempDeleteRide(rideNumber);
+        ////////////////////////////////////////////////////////////////////////
         
     }
 
@@ -991,9 +1119,13 @@ public class GatorTaxi {
         // System.out.println(rideNumber+" "+newTripDuration);
         RbtRide rbtRideLocation=Rbt.searchRide(rideNumber);
         if(rbtRideLocation==null) return;
-        MinHeapRide minheapRideLocation=rbtRideLocation.minheapPtr;
 
-        int existingTripDuration=rbtRideLocation.tripDuration;
+        ////////////////////////////////////////////////////////////////////////
+        MinHeapRide minheapRideLocation=MinHeap.minHeapSearch(rideNumber);
+        ////////////////////////////////////////////////////////////////////////
+
+        if(minheapRideLocation==null) return;
+        int existingTripDuration=minheapRideLocation.tripDuration;
         if(newTripDuration<=existingTripDuration) 
         {   
             rbtRideLocation.tripDuration=newTripDuration;
@@ -1001,18 +1133,23 @@ public class GatorTaxi {
         }
         else if(existingTripDuration<newTripDuration && newTripDuration<=(2*existingTripDuration))
         {   
+            
             CancelRide(rideNumber);
-            Insert(rideNumber, rbtRideLocation.rideCost+10, newTripDuration);
+            Insert(rideNumber, minheapRideLocation.rideCost+10, newTripDuration);
         }
         else if(newTripDuration>(2*existingTripDuration))
         {   
             
             if(rbtRideLocation!=null)
                 CancelRide(rbtRideLocation.rideNumber);
+
+            // CancelRide(minheapRideLocation.rideNumber);
         }
 
         
     }
+
+
 
     // METHOD TO PROCESS INPUT FILE. CREATE A LIST OF METHOD CALLS. EACH ELEMENT OF THIS LIST IS A STRING.
     private static List<String> processInputFile(List<String> methodList,String fileName)
@@ -1053,6 +1190,7 @@ public class GatorTaxi {
         // String fileName=args[0];
         // List<String> methodList=new ArrayList<>();
         // methodList=processInputFile(methodList,fileName);
+        
         // for(String str:methodList)
         // {   
         //     String functionName=str.substring(0, str.indexOf("("));
@@ -1062,8 +1200,6 @@ public class GatorTaxi {
         //     int param1=-1,param2=-1,param3=-1;
         //     if(paramLen==1) 
         //     {   
-        //         // System.out.println(1); 
-                
         //         try
         //         {
         //             param1=Integer.parseInt(parameterList[0]);
@@ -1111,6 +1247,10 @@ public class GatorTaxi {
         //     {
         //         UpdateTrip(param1, param2);
         //     }
+        //     else if(functionName.equals("CancelRide"))
+        //     {
+        //         CancelRide(param1);
+        //     }
 
         // }
 
@@ -1132,10 +1272,11 @@ public class GatorTaxi {
         // Insert(96,28,82) ;
         // Insert(73,28,56) ;
         // UpdateTrip(9, 88);
-        // // for(int i=0;i<MinHeap.minHeapList.size();i++)
-        // // {
-        // //     System.out.println(MinHeap.minHeapList.get(i).rideNumber);
-        // // }
+        // // // for(int i=0;i<MinHeap.minHeapList.size();i++)
+        // // // {
+        // // //     System.out.println(MinHeap.minHeapList.get(i).rideNumber);
+        // // // }
+        // // // printElements();
         // GetNextRide();
         // Print(9);
         // Insert(20,49,59); 
@@ -1145,129 +1286,124 @@ public class GatorTaxi {
         // UpdateTrip(62, 15);
         // GetNextRide();
         // Print(1, 100);
+        // printElements();
         // Insert(53, 28, 19);
         // Print(1, 100);
         // Print(1);
         // Print(-1);
-        // printElements();
-        // try
-        // {   
-        //     Files.write(Paths.get("output.txt"), sb.toString().getBytes());
+        
+        try
+        {   
+            Files.write(Paths.get("output.txt"), sb.toString().getBytes());
 
-        // }
-        // catch(Exception e)
-        // {
-        //     System.out.println("Exception");
-        // }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Exception");
+        }
         
 
 
 
         // MANUAL INSERT TEST CASE 2
-        Insert(5,50,120);
-        Insert(4,30,60);
-        Insert(7,40,90);
-        Insert(3,20,40);
-        Insert(1,10,20);
-        Print(2);
-        Insert(6,35,70);
-        Insert(8,45,100);
-        Print(3);
-        Print(1,6);
-        UpdateTrip(6,75);
-        // // printElements();
-        Insert(10,60,150);
-        GetNextRide();
-
-
-
-        CancelRide(5);
-        // // System.out.println(Rbt.root.rideNumber);
-        // // printElements();
-        UpdateTrip(3,22);
-        Insert(9,55,110);
-        // // // // // printElements();
-        GetNextRide();
-        UpdateTrip(6,95);
-        Print(6);
-        Print(5,9);
-        printElements();
-        GetNextRide();
-        CancelRide(7);
-        Print(7);
-        Insert(11,70,170);
-        GetNextRide();
-        Insert(12,80,200);
-        Print(12);
-        UpdateTrip(11,210);
-        GetNextRide();
-        CancelRide(14);
-        UpdateTrip(12,190);
-        Insert(13,70,220);
-        GetNextRide();
-        Insert(14,100,40);
-        UpdateTrip(14,100);
-        CancelRide(12);
-        Print(11,14);
-        GetNextRide();
-        Insert(15,20,35);
-        Print(14);
-        Print(10,16);
-        GetNextRide();
-        UpdateTrip(13,30);
-        Print(13);
-        GetNextRide();
-        Print(12);
-        CancelRide(19);
-        Insert(16,60,45);
-        Insert(17,70,25);
-        UpdateTrip(16,60);
-        GetNextRide();
-        Print(11);
-        Print(16,18);
-        Insert(18,65,130);
-        Insert(12,40,30);
-        Insert(8,60,97);
-        UpdateTrip(16,82);
-        Insert(20,16,75);
-        UpdateTrip(18,300);
-        Print(23);
-        Print(12,21);
-        CancelRide(12);
-        GetNextRide();
-        CancelRide(25);
-        Print(20,26);
-        GetNextRide();
-        UpdateTrip(16,124);
-        Insert(7,125,54);
-        GetNextRide();
-        Print(16);
-        Insert(22,80,85);
-        Insert(15,90,85);
-        UpdateTrip(22,195);
-        GetNextRide();
-        Insert(23,49,46);
-        Insert(1,56,85);
-        UpdateTrip(16,300);
-        GetNextRide();
-        Print(1,30);
-        CancelRide(1);
-        GetNextRide();
-        GetNextRide();
-        Insert(24,21,46);
-        Insert(17,12,37);
-        GetNextRide();
-        Print(16);
-        Insert(24,80,85);
-        Insert(15,90,85);
-        CancelRide(28);
-        UpdateTrip(23,450);
-        GetNextRide();
-        Print(24);
-        Print(22,26);
-        CancelRide(29);
-        Print(28);
-
+        // Insert(5,50,120);
+        // Insert(4,30,60);
+        // Insert(7,40,90);
+        // Insert(3,20,40);
+        // Insert(1,10,20);
+        // Print(2);
+        // Insert(6,35,70);
+        // Insert(8,45,100);
+        // Print(3);
+        // Print(1,6);
+        // UpdateTrip(6,75);
+        // Insert(10,60,150);
+        // GetNextRide();
+        // CancelRide(5);
+        // UpdateTrip(3,22);
+        // Insert(9,55,110);
+        // GetNextRide();
+        // UpdateTrip(6,95);
+        // Print(6);
+        // Print(5,9);
+        // GetNextRide();
+        // CancelRide(7);
+        // Print(7);
+        // Insert(11,70,170);
+        // GetNextRide();
+        // Insert(12,80,200);
+        // Print(12);
+        // UpdateTrip(11,210);
+        // GetNextRide();
+        // CancelRide(14);
+        // UpdateTrip(12,190);
+        // Insert(13,70,220);
+        // GetNextRide();
+        // Insert(14,100,40);
+        // UpdateTrip(14,100);
+        // CancelRide(12);
+        // Print(11,14);
+        // GetNextRide();
+        // Insert(15,20,35);
+        // Print(14);
+        // Print(10,16);
+        // GetNextRide();
+        // UpdateTrip(13,30);
+        // Print(13);
+        // GetNextRide();
+        // Print(12);
+        // CancelRide(19);
+        // Insert(16,60,45);
+        // Insert(17,70,25);
+        // UpdateTrip(16,60);
+        // GetNextRide();
+        // Print(11);
+        // Print(16,18);
+        // Insert(18,65,130);
+        // Insert(12,40,30);
+        // Insert(8,60,97);
+        // UpdateTrip(16,82);
+        // Insert(20,16,75);
+        // UpdateTrip(18,300);
+        // Print(23);
+        // Print(12,21);
+        // CancelRide(12);
+        // GetNextRide();
+        // CancelRide(25);
+        // Print(20,26);
+        // GetNextRide();
+        // UpdateTrip(16,124);
+        // Insert(7,125,54);
+        // GetNextRide();
+        // Print(16);
+        // Insert(22,80,85);
+        // Insert(15,90,85);
+        // UpdateTrip(22,195);
+        // GetNextRide();
+        // Insert(23,49,46);
+        // Insert(1,56,85);
+        // UpdateTrip(16,300);
+        // GetNextRide();
+        // Print(1,30);
+        // CancelRide(1);
+        // GetNextRide();
+        // GetNextRide();
+        // Insert(24,21,46);
+        // Insert(17,12,37);
+        // GetNextRide();
+        // Print(16);
+        // printElements();
+        // //PROGRAM TERMINATES HERE
+        // Insert(24,80,85);
+        // Insert(15,90,85);
+        // CancelRide(28);
+        // UpdateTrip(23,450);
+        // GetNextRide();
+        // Print(24);
+        // Print(22,26);
+        // CancelRide(29);
+        // Print(28);
+        
 
         try
         {
