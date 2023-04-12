@@ -7,7 +7,7 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
-		  GatorTaxi.java
+		  gatorTaxi.java
 
 default: classes
 
