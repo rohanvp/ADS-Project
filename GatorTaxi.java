@@ -510,18 +510,21 @@ class Rbt {
                 y.rideNumber=z.rideNumber;
                 y.tripDuration=z.tripDuration;
                 y.color=z.color;
-                y.minheapPtr.rbtPtr=y;
+
                 if(z==z.parent.left) z.parent.left=null;
                 else z.parent.right=null;
+                MinHeap.deleteRide(y.minheapPtr);
+                MinHeap.minHeapify(0);
 
-                
+                y.minheapPtr=z.minheapPtr;
+
                 if(y.parent==null) 
                 {
                     
                     root=y;
                     
                 }
-                return y;
+                return null;
             }
             else
             {   
